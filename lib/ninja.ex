@@ -1,18 +1,15 @@
 defmodule Ninja do
-  @moduledoc """
-  Documentation for Ninja.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Ninja.hello()
+    @moduledoc """
+    Documentation for WebhookProcessor.
+    """
+  
+    @doc """
+    Hello world.
+    ## Examples
+        iex> WebhookProcessor.hello()
+        :world
+    """
+    def hello do
       :world
-
-  """
-  def hello do
-    :world
+    end
   end
-end

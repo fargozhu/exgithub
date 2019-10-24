@@ -19,7 +19,7 @@ defmodule Ninja.EndpointTest do
 
   test "it returns 200 for a 'closed' with a valid 'closed' payload" do
     # Create a test connection
-    conn = conn(:post, "/event", %{ action: "closed", issue: %{ id: "122" } })
+    conn = conn(:post, "/event", %{action: "closed", issue: %{id: "122"}})
 
     # Invoke the plug
     conn = Ninja.Endpoint.call(conn, @opts)
@@ -30,7 +30,7 @@ defmodule Ninja.EndpointTest do
 
   test "it returns 200 for a 'opened' with a valid 'opened' payload" do
     # Create a test connection
-    conn = conn(:post, "/event", %{ action: "opened" })
+    conn = conn(:post, "/event", %{action: "opened"})
 
     # Invoke the plug
     conn = Ninja.Endpoint.call(conn, @opts)
@@ -41,7 +41,7 @@ defmodule Ninja.EndpointTest do
 
   test "it returns 200 for a 'created' with a valid payload" do
     # Create a test connection
-    conn = conn(:post, "/event", %{ action: "created" })
+    conn = conn(:post, "/event", %{action: "created"})
 
     # Invoke the plug
     conn = Ninja.Endpoint.call(conn, @opts)

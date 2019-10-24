@@ -14,7 +14,7 @@ defmodule Ninja.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :plug_cowboy],
       mod: {Ninja.Application, []}
     ]
   end
@@ -22,10 +22,8 @@ defmodule Ninja.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:poison, "~> 3.0"},
-      {:plug, "~> 1.6"},
-      {:cowboy, "~> 2.4"},
-      {:plug_cowboy, "~> 2.0"},     
+      {:poison, "~> 3.1"},
+      {:plug_cowboy, "~> 2.0"}
     ]
   end
 end

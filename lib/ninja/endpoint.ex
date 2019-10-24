@@ -1,38 +1,75 @@
 defmodule Ninja.Endpoint do
-    use Plug.Router    
-    alias Ninja.Jira
-    
-    plug(Plug.Logger)
-    # responsible for matching routes
-    plug(:match)
-    # Using Poison for JSON decoding
-    # Note, order of plugs is important, by placing this _after_ the 'match' plug,
-    # we will only parse the request AFTER there is a route match.
-    plug(Plug.Parsers, parsers: [:json], pass: ["application/json"], json_decoder: Poison)
-    # responsible for dispatching responses
-    plug(:dispatch)
+  use Plug.Router
 
-    get "/ping" do
-        send_resp(conn, 200, "pong!")
-    end
+  plug(Plug.Logger)
+  plug(:match)
+  plug(Plug.Parsers, parsers: [:json], json_decoder: Poison)
+  plug(:dispatch)
 
-    post "/event" do            
-        { _status, resp } = process_event(conn.body_params)
-        conn
-        |> put_resp_content_type("application/json")        
-        |> send_resp(200, Poison.encode!(resp))
-    end    
-    
-    defp process_event(event = %{ "action" => _ }) do        
-        Jira.new(event)
-        |> IO.inspect
-        |> Jira.process_jira_issue(event)
-        |> IO.inspect        
-    end
+  post "/events" do    
+    #{status, body} = process_request(conn.body_params)
+    send_resp(conn, 200, %{fname: "jaime", lname: "gomes"})
+  end
 
-    defp process_event(_event), do: Poison.encode!(%{error: "Expected Payload: { 'action': opened|closed|updated, ... }"})
+  match _ do
+    send_resp(conn, 404, "oops... Nothing here :(")
+  end
 
-    match _ do
-        send_resp(conn, 404, "Requested page not found!")
-    end    
+  # processes any event triggered through Github webhook
+  def process_event(conn) do
+    process_request(conn.body_params)
+    |> Poison.encode!()
+    |> send_response(conn)
+  end
+
+  defp send_response(resp, conn), do: send_resp(conn, resp.status, resp.payload)
+
+  # called when a Github issue is created.
+  defp process_request(%{"action" => "opened"}) do
+    %{
+      status: 200,
+      payload: %{
+        action: "created"
+      }
+    }
+  end
+
+  # called when a Github issue is closed.
+  defp process_request(%{"action" => "closed"}) do
+    %{
+      status: 200,
+      payload: %{
+        action: "closed"
+      }
+    }
+  end
+
+  # called when a comment is added to a Github issue.
+  defp process_request(%{"action" => "created"}) do
+    %{
+      status: 200,
+      payload: %{
+        action: "added_comment"
+      }
+    }
+  end
+
+  defp process_request(_event) do
+    %{
+      status: 500,
+      payload: %{
+        error: "Expected Payload: { 'action': opened|closed|updated, ... }"
+      }
+    }
+  end
+
+
+  #def child_spec(opts) do
+  #  %{
+  #    id: __MODULE__,
+  #    start: {__MODULE__, :start_link, [opts]}
+  #  }
+  #end
+
+  #def start_link(_opts), do: Plug.Cowboy.http(__MODULE__, [])
 end

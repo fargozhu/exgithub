@@ -1,4 +1,5 @@
 defmodule Ninja.Application do
+  @moduledoc "OTP Application specification for Ninja"
   use Application
 
   def start(_type, _args) do
@@ -8,13 +9,9 @@ defmodule Ninja.Application do
         plug: Ninja.Endpoint,
         options: [port: Application.get_env(:ninja, :port)]
       )
-    ]
-
-    opts = [
-      strategy: :one_for_one, 
-      name: Ninja.Supervisor
-    ]
-    
+    ]  
+  
+    opts = [strategy: :one_for_one, name: Ninja.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
