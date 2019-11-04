@@ -3,11 +3,13 @@ defmodule Ninja.MixProject do
 
   def project do
     [
-      app: :ninja,
+      app: :exgithub,
       version: "0.1.0",
       elixir: "~> 1.9",
+      package: package(),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -15,15 +17,22 @@ defmodule Ninja.MixProject do
   def application do
     [
       extra_applications: [:logger, :plug_cowboy],
-      mod: {Ninja.Application, []}
+      mod: {ExGithub.Application, []}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:poison, "~> 3.1"},
-      {:plug_cowboy, "~> 2.0"}
+      {:poison, "~> 4.0"},
+      {:plug_cowboy, "~> 2.0"},
+      {:gira, "~> 0.3.0", override: true},
     ]
+  end
+
+  defp package do
+    [ maintainers: ["fargozhu"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/fargozhu/exgithub"} ]
   end
 end

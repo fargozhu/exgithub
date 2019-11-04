@@ -1,3 +1,3 @@
 use Mix.Config
 
-config :ninja, port: 4001
+config :exgithub, port: 4001

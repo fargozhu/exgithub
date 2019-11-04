@@ -1,4 +1,4 @@
-defmodule Ninja do
+defmodule ExGitHub do
   @moduledoc """
   Documentation for WebhookProcessor.
   """

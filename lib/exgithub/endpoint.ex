@@ -1,4 +1,7 @@
-defmodule Ninja.Endpoint do
+defmodule ExGitHub.Endpoint do
+  @moduledoc """
+  This is the ExGitHub Endpoint definition
+  """
   use Plug.Router
 
   plug(Plug.Logger)
@@ -10,6 +13,9 @@ defmodule Ninja.Endpoint do
     send_resp(conn, 200, "pong")
   end
 
+  @doc """
+  This resource will process all the Github webhooks events related with issues
+  """
   post "/events" do
     {:ok, resp} = process_request(conn.body_params)
 
@@ -19,12 +25,6 @@ defmodule Ninja.Endpoint do
 
   match _ do
     send_resp(conn, 404, "oops... Nothing here :(")
-  end
-
-  # processes any event triggered through Github webhook
-  def process_event(conn) do
-    process_request(conn.body_params)
-    |> send_response(conn)
   end
 
   defp send_response(resp, conn), do: send_resp(conn, resp.status, Poison.encode!(resp.payload))
