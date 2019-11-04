@@ -16,12 +16,12 @@ defmodule ExGitHub.Model.Issue do
     defstruct id: nil, title: nil, user: nil, labels: nil, body: nil
 end
 
+defmodule ExGitHub.Model.User do
     @moduledoc """
 
     ## Reference
     https://developer.github.com/webhooks/#events
     """
-defmodule ExGitHub.Model.User do
     defstruct login: nil
 end
 

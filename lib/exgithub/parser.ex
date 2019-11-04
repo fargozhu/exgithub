@@ -19,7 +19,7 @@ defmodule ExGitHub.Parser do
     @doc """
     Parse user record from the API response json.
     """
-    def parse_user() do
+    def parse_user(object) do
         struct(ExGitHub.Model.User, object)
     end
 end

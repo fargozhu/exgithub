@@ -17,6 +17,9 @@ defmodule ExGitHub.Endpoint do
   This resource will process all the Github webhooks events related with issues
   """
   post "/events" do
+    github_event = Parser.parse_event(conn.body_params)
+    IO.inspect github_event
+    
     {:ok, resp} = process_request(conn.body_params)
 
     resp
@@ -30,7 +33,7 @@ defmodule ExGitHub.Endpoint do
   defp send_response(resp, conn), do: send_resp(conn, resp.status, Poison.encode!(resp.payload))
 
   # called when a Github issue is created.
-  defp process_request(%{"action" => "opened"}) do
+  defp process_request(payload = %{"action" => "opened"}) do    
     {:ok,
      %{
        status: 200,
