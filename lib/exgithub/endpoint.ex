@@ -2,44 +2,54 @@ defmodule ExGitHub.Endpoint do
   @moduledoc """
   This is the ExGitHub Endpoint definition
   """
+  require Logger
   use Plug.Router
 
-  plug(Plug.Logger)
-  plug(:match)
-  plug(Plug.Parsers, parsers: [:json], json_decoder: Poison)
-  plug(:dispatch)
+  alias ExGitHub.Plug.{SignatureVerification, CacheBodyReader}
 
-  get "/ping" do
-    send_resp(conn, 200, "pong")
+  @secret_token Application.get_env(:exgithub, :secret_token)
+
+  plug :match
+  plug Plug.Logger
+  plug Plug.RequestId
+  plug Plug.Parsers,
+    parsers: [:json],
+    body_reader: {CacheBodyReader, :read_body, []},
+    json_decoder: Jason
+  plug SignatureVerification, header: "x-hub-signature", secret: @secret_token
+  plug :dispatch
+
+  get "/health" do
+    send_resp(conn, 200, "OK")
   end
 
-  @doc """
-  This resource will process all the Github webhooks events related with issues
-  """
   post "/events" do
-    github_event = Parser.parse_event(conn.body_params)
-    IO.inspect github_event
-    
     {:ok, resp} = process_request(conn.body_params)
-
     resp
     |> send_response(conn)
   end
+
 
   match _ do
     send_resp(conn, 404, "oops... Nothing here :(")
   end
 
-  defp send_response(resp, conn), do: send_resp(conn, resp.status, Poison.encode!(resp.payload))
+  defp send_response(resp, conn) do
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(resp.status, Poison.encode!(resp))
+  end
 
   # called when a Github issue is created.
-  defp process_request(payload = %{"action" => "opened"}) do    
+  defp process_request(payload = %{"action" => "opened"}) do
+    Logger.debug("processing request from github...")
+    response = ExGitHub.Controller.create(payload)
+
     {:ok,
      %{
-       status: 200,
-       payload: %{
-         action: "created"
-       }
+       status: response.status,
+       action: "created",
+       payload: response.payload
      }}
   end
 

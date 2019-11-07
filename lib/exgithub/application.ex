@@ -1,6 +1,8 @@
 defmodule ExGitHub.Application do
   @moduledoc "OTP Application specification for ExGitHub"
+
   use Application
+  require Logger
 
   def start(_type, _args) do
     children = [
@@ -12,6 +14,9 @@ defmodule ExGitHub.Application do
     ]
 
     opts = [strategy: :one_for_one, name: ExGitHub.Supervisor]
+
+    Logger.info("Starting application ...")
+
     Supervisor.start_link(children, opts)
   end
 end

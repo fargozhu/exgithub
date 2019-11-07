@@ -1,4 +1,4 @@
-defmodule Ninja.MixProject do
+defmodule ExGitHub.MixProject do
   use Mix.Project
 
   def project do
@@ -17,7 +17,7 @@ defmodule Ninja.MixProject do
   def application do
     [
       extra_applications: [:logger, :plug_cowboy],
-      mod: {ExGithub.Application, []}
+      mod: {ExGitHub.Application, []}
     ]
   end
 
@@ -25,14 +25,17 @@ defmodule Ninja.MixProject do
   defp deps do
     [
       {:poison, "~> 4.0"},
+      {:jason, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
-      {:gira, "~> 0.3.0", override: true},
+      {:gira, "~> 0.3.0", override: true}
     ]
   end
 
   defp package do
-    [ maintainers: ["fargozhu"],
+    [
+      maintainers: ["fargozhu"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/fargozhu/exgithub"} ]
+      links: %{"GitHub" => "https://github.com/fargozhu/exgithub"}
+    ]
   end
 end

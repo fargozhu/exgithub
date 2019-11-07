@@ -23,3 +23,6 @@ erl_crash.dump
 ninja-*.tar
 
 resources/*
+
+# ElixirLS VS Extensions
+.elixir_ls/
