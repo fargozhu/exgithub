@@ -20,7 +20,7 @@ defmodule ExGitHub.Endpoint do
     json_decoder: Jason
   )
 
-  plug(SignatureVerification, header: "x-hub-signature", secret: @secret_token)
+  plug(SignatureVerification, header: "x-hub-signature", secret: @secret_token, mount: "/events")
   plug(:dispatch)
 
   get "/health" do
@@ -77,7 +77,7 @@ defmodule ExGitHub.Endpoint do
      %{
        status: response.status,
        payload: %{
-         action: "closed"
+         action: "closed",
          payload: response.payload
        }
      }}

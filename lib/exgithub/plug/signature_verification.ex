@@ -5,7 +5,15 @@ defmodule ExGitHub.Plug.SignatureVerification do
   def init(options), do: options
 
   def call(conn, opts) do
-    verify_signature(conn, opts)
+    mount = Keyword.get(opts, :mount)
+
+    case conn.request_path do
+      ^mount ->
+        verify_signature(conn, opts)
+
+      _ ->
+        conn
+    end
   end
 
   defp verify_signature(conn, opts) do
