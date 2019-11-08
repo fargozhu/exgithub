@@ -31,7 +31,7 @@ defmodule ExGitHub.EndpointTest do
       }
     }
 
-    hmac = ExGitHub.HelperTest.generate_http_signature(Application.get_env(:exgithub, :secret_token), Poison.encode!(request))
+    hmac = ExGitHub.Helpers.generate_http_signature(Application.get_env(:exgithub, :secret_token),Poison.encode!(request))
 
     conn =
       conn(:post, "/events", Poison.encode!(request))
@@ -46,18 +46,21 @@ defmodule ExGitHub.EndpointTest do
     assert resp_decoded["payload"]["msg"] == "github issue created in jira"
   end
 
-  @tag :skip
   test "it returns 200 when closing a Jira issue" do
     request = %{
       action: "closed",
       issue: %{
         id: 519_124_749,
-        number: 30,
-        labels: ["SUSE"],
+        number: 330,
+        labels: ["SUSE"]
       }
     }
 
-    hmac = ExGitHub.HelperTest.generate_http_signature(Application.get_env(:exgithub, :secret_token), Poison.encode!(request))
+    hmac =
+      ExGitHub.Helpers.generate_http_signature(
+        Application.get_env(:exgithub, :secret_token),
+        Poison.encode!(request)
+      )
 
     conn =
       conn(:post, "/events", Poison.encode!(request))
@@ -69,43 +72,89 @@ defmodule ExGitHub.EndpointTest do
     assert conn.status == 200
   end
 
-  @tag :skip
-  test "it returns 200 when adding a comment" do
-    conn = conn(:post, "/events", %{action: "created"})
-    conn = ExGitHub.Endpoint.call(conn, @opts)
-
-    assert conn.state == :sent
-    assert conn.status == 200
-  end
-
-  @tag :skip
   test "it returns 400 for an invalid Github action" do
-    conn = conn(:post, "/events", %{action: "whatever"})
-    conn = ExGitHub.Endpoint.call(conn, @opts)
-    decoded = Poison.decode!(conn.resp_body)
+    request = %{
+      action: "unknown",
+      issue: %{
+        id: 519_124_749,
+        number: 30,
+        labels: ["SUSE"]
+      }
+    }
+
+    hmac =
+      ExGitHub.Helpers.generate_http_signature(
+        Application.get_env(:exgithub, :secret_token),
+        Poison.encode!(request)
+      )
+
+    conn =
+      conn(:post, "/events", Poison.encode!(request))
+      |> put_req_header("x-hub-signature", "sha1=#{hmac}")
+      |> put_req_header("content-type", "application/json")
+      |> ExGitHub.Endpoint.call(@opts)
 
     assert conn.state == :sent
     assert conn.status == 400
-    assert decoded["error"] == "invalid action"
   end
 
-  @tag :skip
-  test "it returns 400 for an invalid content request" do
-    conn = conn(:post, "/events", %{fake_news: "whatever"})
-    conn = ExGitHub.Endpoint.call(conn, @opts)
-    decoded = Poison.decode!(conn.resp_body)
+  test "it returns 401 for an invalid http signature" do
+    request = %{
+      action: "created",
+      issue: %{
+        id: 519_124_749,
+        number: 30,
+        labels: ["SUSE"]
+      }
+    }
+
+    fake_request = %{
+      action: "unknown",
+      issue: %{
+        id: 519_124_749,
+        number: 30,
+        labels: ["SUSE"]
+      }
+    }
+
+    hmac =
+      ExGitHub.Helpers.generate_http_signature(
+        Application.get_env(:exgithub, :secret_token),
+        Poison.encode!(fake_request)
+      )
+
+      conn =
+      conn(:post, "/events", Poison.encode!(request))
+      |> put_req_header("x-hub-signature", "sha1=#{hmac}")
+      |> put_req_header("content-type", "application/json")
+      |> ExGitHub.Endpoint.call(@opts)
 
     assert conn.state == :sent
-    assert conn.status == 400
-    assert decoded["error"] == "invalid content"
+    assert conn.status == 401
   end
 
-  @tag :skip
-  test "it returns 404" do
-    conn = conn(:post, "/fake")
-    conn = ExGitHub.Endpoint.call(conn, @opts)
+  test "it returns 401 when http signature header is not set" do
+    request = %{
+      action: "unknown",
+      issue: %{
+        id: 519_124_749,
+        number: 30,
+        labels: ["SUSE"]
+      }
+    }
+
+    hmac =
+      ExGitHub.Helpers.generate_http_signature(
+        Application.get_env(:exgithub, :secret_token),
+        Poison.encode!(request)
+      )
+
+    conn =
+      conn(:post, "/events", Poison.encode!(request))
+      |> put_req_header("content-type", "application/json")
+      |> ExGitHub.Endpoint.call(@opts)
 
     assert conn.state == :sent
-    assert conn.status == 404
+    assert conn.status == 401
   end
 end
