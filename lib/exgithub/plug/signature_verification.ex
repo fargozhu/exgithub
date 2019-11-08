@@ -22,11 +22,19 @@ defmodule ExGitHub.Plug.SignatureVerification do
       false ->
         Logger.error(fn -> "received webhook with invalid signature" end)
         halt(send_resp(conn, 401, "received webhook with invalid signature"))
+
       {:error, msg} ->
         Logger.error(msg)
         halt(send_resp(conn, 401, msg))
+
       _ ->
-        halt(send_resp(conn, 401, "something went wrong. I bet a finger that signature matches failed."))
+        halt(
+          send_resp(
+            conn,
+            401,
+            "something went wrong. I bet a finger that signature matches failed."
+          )
+        )
     end
   end
 
@@ -37,12 +45,13 @@ defmodule ExGitHub.Plug.SignatureVerification do
     end
   end
 
-  defp get_secret(secret) when not is_nil(secret), do: {:ok,secret}
+  defp get_secret(secret) when not is_nil(secret), do: {:ok, secret}
   defp get_secret(nil), do: {:error, "secret not found"}
 
   defp valid_request?(digest, secret, conn) do
+    Logger.debug(conn.assigns.raw_body)
     hmac = :crypto.hmac(:sha, secret, conn.assigns.raw_body) |> Base.encode16(case: :lower)
-    Logger.debug("Comparing signatures: is " <> digest <> " is equal to " <> hmac)
+    Logger.debug("Comparing signatures: is " <> digest <> " equal to " <> hmac)
     Plug.Crypto.secure_compare(digest, hmac)
   end
 end
