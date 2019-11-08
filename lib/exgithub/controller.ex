@@ -11,10 +11,10 @@ defmodule ExGitHub.Controller do
   def create(request) do
     {:ok, client} = Gira.new(@base_url, @authorization_token)
 
-    with  {:ok, jira_resp} <- search_github_on_jira(client, request["issue"]["number"]),
-          false <- is_exist(jira_resp),
-          parse = ExGitHub.Parser.parse_jira(request) do
-      Logger.debug("jira issue with id #{jira_id} will be closed")
+    with {:ok, jira_resp} <- search_github_on_jira(client, request["issue"]["number"]),
+         false <- is_exist(jira_resp),
+         parse = ExGitHub.Parser.parse_jira(request) do
+      Logger.debug("jira issue will be created")
       {_status, response} = Gira.create_issue_with_basic_info(client, parse)
       response
     else
@@ -25,12 +25,13 @@ defmodule ExGitHub.Controller do
   def close(request) do
     {:ok, client} = Gira.new(@base_url, @authorization_token)
 
-    with  {:ok, jira_resp} <- search_github_on_jira(client, request["issue"]["number"]),
-          true <- is_exist(jira_resp),
-          jira_id = Enum.at(jira_resp.payload["issues"],0)["id"] do
-        Logger.debug("jira issue with id #{jira_id} will be closed")
-        {_status, response} = Gira.close_issue(client, %{ jira_id: jira_id, transition_id: "31" })
-        response
+    with {:ok, jira_resp} <- search_github_on_jira(client, request["issue"]["number"]),
+         true <- is_exist(jira_resp),
+         jira_id = Enum.at(jira_resp.payload["issues"], 0)["id"] do
+      Logger.debug("jira issue with id #{jira_id} will be closed")
+
+      {_status, response} = Gira.close_issue(client, %{jira_id: jira_id, transition_id: "31"})
+      response
     else
       true -> %{status: 200, payload: %{msg: "github issue already exists in jira"}}
     end
