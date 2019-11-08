@@ -16,9 +16,11 @@ defmodule ExGitHub.Controller do
          parse = ExGitHub.Parser.parse_jira(request) do
       Logger.debug("jira issue will be created")
       {_status, response} = Gira.create_issue_with_basic_info(client, parse)
-      response
+      %{status: 200, payload: %{msg: "github issue created in jira"}}
     else
-      true -> %{status: 200, payload: %{msg: "github issue already exists in jira"}}
+      true ->
+        Logger.debug("github issue already linked")
+        %{status: 200, payload: %{msg: "github issue already exists in jira"}}
     end
   end
 

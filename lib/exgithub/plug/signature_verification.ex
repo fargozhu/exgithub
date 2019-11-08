@@ -32,7 +32,8 @@ defmodule ExGitHub.Plug.SignatureVerification do
         halt(send_resp(conn, 401, "received webhook with invalid signature"))
 
       {:error, msg} ->
-        Logger.error(msg)
+        Logger.info(msg)
+        IO.inspect(msg)
         halt(send_resp(conn, 401, msg))
 
       _ ->
@@ -49,12 +50,13 @@ defmodule ExGitHub.Plug.SignatureVerification do
   defp get_signature_digest(conn, opts) do
     case get_req_header(conn, opts[:header]) do
       ["sha1=" <> digest] -> {:ok, digest}
-      _ -> nil
+      _ -> {:error, "HTTP signature header is not set"}
     end
   end
 
   defp get_secret(secret) when not is_nil(secret), do: {:ok, secret}
   defp get_secret(nil), do: {:error, "secret not found"}
+  defp get_secret(_), do: {:error, "secret messed up"}
 
   defp valid_request?(digest, secret, conn) do
     Logger.debug(conn.assigns.raw_body)

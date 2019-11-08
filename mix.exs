@@ -27,7 +27,13 @@ defmodule ExGitHub.MixProject do
       {:poison, "~> 4.0"},
       {:jason, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
-      {:gira, "~> 0.3.0", override: true}
+      {:gira, "~> 0.3.0", override: true},
+      {:excoveralls, "~> 0.7", only: :test},
+      # {:meck, "~> 0.8.9", only: [:dev, :test]},
+      # {:mock, "~> 0.2", only: [:dev, :test]},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:inch_ex, "~>2.0", only: [:dev, :test]},
+      {:benchfella, "~> 0.3.3", only: :dev}
     ]
   end
 
