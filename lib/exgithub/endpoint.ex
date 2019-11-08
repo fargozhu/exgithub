@@ -28,7 +28,7 @@ defmodule ExGitHub.Endpoint do
   end
 
   post "/events" do
-    # Check if it contains the 'SUSE' label
+    # Check if it contains the trigger @label
     with true <- is_label_present(conn.body_params["issue"]["labels"], @label) do
       {:ok, resp} = process_request(conn.body_params)
 
@@ -57,7 +57,7 @@ defmodule ExGitHub.Endpoint do
 
   # called when a Github issue is created.
   defp process_request(payload = %{"action" => "opened"}) do
-    Logger.debug("creating a new github issue...")
+    Logger.debug("creating a new jira issue...")
     response = ExGitHub.Controller.create(payload)
 
     {:ok,
@@ -70,7 +70,7 @@ defmodule ExGitHub.Endpoint do
 
   # called when a Github issue is closed.
   defp process_request(payload = %{"action" => "closed"}) do
-    Logger.debug("closing a github issue...")
+    Logger.debug("closing a jira issue...")
     response = ExGitHub.Controller.close(payload)
 
     {:ok,
@@ -83,14 +83,16 @@ defmodule ExGitHub.Endpoint do
      }}
   end
 
-  # called when a comment is added to a Github issue.
-  defp process_request(%{"action" => "created"}) do
+  # called when a label is added to a Github issue.
+  defp process_request(payload = %{"action" => "labeled"}) do
+    Logger.debug("creating a new jira issue...")
+    response = ExGitHub.Controller.create(payload)
+
     {:ok,
      %{
-       status: 200,
-       payload: %{
-         action: "added_comment"
-       }
+       status: response.status,
+       action: "created",
+       payload: response.payload
      }}
   end
 
