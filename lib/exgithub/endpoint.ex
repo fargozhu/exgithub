@@ -8,7 +8,7 @@ defmodule ExGitHub.Endpoint do
   alias ExGitHub.Plug.{SignatureVerification, CacheBodyReader}
 
   @secret_token Application.get_env(:exgithub, :secret_token)
-  @label "SUSE"
+  @label Application.get_env(:exgithub, :github_trigger_label)
 
   plug(:match)
   plug(Plug.Logger)
