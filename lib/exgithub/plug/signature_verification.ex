@@ -32,8 +32,7 @@ defmodule ExGitHub.Plug.SignatureVerification do
         halt(send_resp(conn, 401, "received webhook with invalid signature"))
 
       {:error, msg} ->
-        Logger.info(msg)
-        IO.inspect(msg)
+        Logger.error(msg)
         halt(send_resp(conn, 401, msg))
 
       _ ->
