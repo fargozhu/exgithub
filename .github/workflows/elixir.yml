@@ -24,7 +24,7 @@ jobs:
         SECRET_TOKEN: $$ { secrets.SECRET_TOKEN }}      
     - name: Run Tests
       run: |
-        mix compile --warnings-as-errors
+        mix compile
         mix format --check-formatted
         mix test
       env:
