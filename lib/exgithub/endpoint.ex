@@ -20,7 +20,12 @@ defmodule ExGitHub.Endpoint do
     json_decoder: Jason
   )
 
-  plug(SignatureVerification, header: "x-hub-signature", secret: @secret_token, mount: "/v1/events")
+  plug(SignatureVerification,
+    header: "x-hub-signature",
+    secret: @secret_token,
+    mount: "/v1/events"
+  )
+
   plug(:dispatch)
 
   get "/health" do
@@ -62,6 +67,7 @@ defmodule ExGitHub.Endpoint do
   defp process_request(payload = %{"action" => "opened"}) do
     Logger.debug("github action...opened")
     response = ExGitHub.Controller.create(payload)
+
     {:ok,
      %{
        status: response.status,
@@ -100,6 +106,7 @@ defmodule ExGitHub.Endpoint do
 
   defp process_request(%{"action" => _}) do
     Logger.debug("github action not supported")
+
     {:ok,
      %{
        status: 400,
@@ -111,6 +118,7 @@ defmodule ExGitHub.Endpoint do
 
   defp process_request(_event) do
     Logger.debug("invalid github payload")
+
     {:ok,
      %{
        status: 400,
