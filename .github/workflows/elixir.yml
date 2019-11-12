@@ -20,7 +20,7 @@ jobs:
       env:
         MIX_ENV: test
         JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-        JIRA_TOKEN: ${{ secrets.JIRA_AUTH_TOKEN }}
+        JIRA_AUTH_TOKEN: ${{ secrets.JIRA_AUTH_TOKEN }}
         SECRET_TOKEN: $$ { secrets.SECRET_TOKEN }}      
     - name: Run Tests
       run: |
