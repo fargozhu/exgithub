@@ -31,7 +31,11 @@ defmodule ExGitHub.EndpointTest do
       }
     }
 
-    hmac = ExGitHub.Helpers.generate_http_signature(Application.get_env(:exgithub, :secret_token),Poison.encode!(request))
+    hmac =
+      ExGitHub.Helpers.generate_http_signature(
+        Application.get_env(:exgithub, :secret_token),
+        Poison.encode!(request)
+      )
 
     conn =
       conn(:post, "/events", Poison.encode!(request))
@@ -123,7 +127,7 @@ defmodule ExGitHub.EndpointTest do
         Poison.encode!(fake_request)
       )
 
-      conn =
+    conn =
       conn(:post, "/events", Poison.encode!(request))
       |> put_req_header("x-hub-signature", "sha1=#{hmac}")
       |> put_req_header("content-type", "application/json")

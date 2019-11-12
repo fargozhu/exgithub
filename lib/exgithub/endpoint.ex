@@ -24,22 +24,25 @@ defmodule ExGitHub.Endpoint do
   plug(:dispatch)
 
   get "/health" do
+    Logger.info("/health endpoint hitted")
     send_resp(conn, 200, "OK")
   end
 
-  post "/events" do
+  post "/v1/events" do
+    Logger.info("/v1/events endpoint hitted")
     # Check if it contains the trigger @label
     with true <- is_label_present(conn.body_params["issue"]["labels"], @label) do
+      Logger.info("event contains the trigger label(s)")
       {:ok, resp} = process_request(conn.body_params)
 
       resp
       |> send_response(conn)
     else
       false ->
-        Logger.info("discarding the github issue due lack of #{@label} label")
+        Logger.info("discarding the github event due lack of #{@label} trigger label(s)")
 
         send_response(
-          %{status: 200, payload: "discarding the github issue due lack of trigger label(s)"},
+          %{status: 200, payload: "discarding the github event due lack of trigger label(s)"},
           conn
         )
     end
@@ -57,7 +60,7 @@ defmodule ExGitHub.Endpoint do
 
   # called when a Github issue is created.
   defp process_request(payload = %{"action" => "opened"}) do
-    Logger.debug("creating a new jira issue...")
+    Logger.debug("action => created")
     response = ExGitHub.Controller.create(payload)
 
     {:ok,
