@@ -9,7 +9,7 @@ defmodule ExGitHub.Controller do
   @authorization_token System.get_env("JIRA_AUTH_TOKEN")
 
   def create(request) do
-    Logger.info("start creating a jira issue...")
+    Logger.info("creating a jira issue")
     {:ok, client} = Gira.new(@base_url, @authorization_token)
 
     with {:ok, jira_resp} <- search_github_on_jira(client, request["issue"]["number"]),

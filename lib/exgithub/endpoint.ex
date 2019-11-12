@@ -20,16 +20,16 @@ defmodule ExGitHub.Endpoint do
     json_decoder: Jason
   )
 
-  plug(SignatureVerification, header: "x-hub-signature", secret: @secret_token, mount: "/events")
+  plug(SignatureVerification, header: "x-hub-signature", secret: @secret_token, mount: "/v1/events")
   plug(:dispatch)
 
   get "/health" do
-    Logger.info("/health endpoint hitted")
+    Logger.info("/health endpoint")
     send_resp(conn, 200, "OK")
   end
 
   post "/v1/events" do
-    Logger.info("/v1/events endpoint hitted")
+    Logger.info("/v1/events endpoint")
     # Check if it contains the trigger @label
     with true <- is_label_present(conn.body_params["issue"]["labels"], @label) do
       Logger.info("event contains the trigger label(s)")
@@ -60,9 +60,8 @@ defmodule ExGitHub.Endpoint do
 
   # called when a Github issue is created.
   defp process_request(payload = %{"action" => "opened"}) do
-    Logger.debug("action => created")
+    Logger.debug("github action...opened")
     response = ExGitHub.Controller.create(payload)
-
     {:ok,
      %{
        status: response.status,
@@ -73,7 +72,7 @@ defmodule ExGitHub.Endpoint do
 
   # called when a Github issue is closed.
   defp process_request(payload = %{"action" => "closed"}) do
-    Logger.debug("closing a jira issue...")
+    Logger.debug("github action...closed")
     response = ExGitHub.Controller.close(payload)
 
     {:ok,
@@ -88,7 +87,7 @@ defmodule ExGitHub.Endpoint do
 
   # called when a label is added to a Github issue.
   defp process_request(payload = %{"action" => "labeled"}) do
-    Logger.debug("creating a new jira issue...")
+    Logger.debug("github action...labeled")
     response = ExGitHub.Controller.create(payload)
 
     {:ok,
@@ -100,6 +99,7 @@ defmodule ExGitHub.Endpoint do
   end
 
   defp process_request(%{"action" => _}) do
+    Logger.debug("github action not supported")
     {:ok,
      %{
        status: 400,
@@ -110,6 +110,7 @@ defmodule ExGitHub.Endpoint do
   end
 
   defp process_request(_event) do
+    Logger.debug("invalid github payload")
     {:ok,
      %{
        status: 400,

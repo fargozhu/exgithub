@@ -38,7 +38,7 @@ defmodule ExGitHub.EndpointTest do
       )
 
     conn =
-      conn(:post, "/events", Poison.encode!(request))
+      conn(:post, "/v1/events", Poison.encode!(request))
       |> put_req_header("x-hub-signature", "sha1=#{hmac}")
       |> put_req_header("content-type", "application/json")
       |> ExGitHub.Endpoint.call(@opts)
@@ -67,7 +67,7 @@ defmodule ExGitHub.EndpointTest do
       )
 
     conn =
-      conn(:post, "/events", Poison.encode!(request))
+      conn(:post, "/v1/events", Poison.encode!(request))
       |> put_req_header("x-hub-signature", "sha1=#{hmac}")
       |> put_req_header("content-type", "application/json")
       |> ExGitHub.Endpoint.call(@opts)
@@ -93,7 +93,7 @@ defmodule ExGitHub.EndpointTest do
       )
 
     conn =
-      conn(:post, "/events", Poison.encode!(request))
+      conn(:post, "/v1/events", Poison.encode!(request))
       |> put_req_header("x-hub-signature", "sha1=#{hmac}")
       |> put_req_header("content-type", "application/json")
       |> ExGitHub.Endpoint.call(@opts)
@@ -104,7 +104,7 @@ defmodule ExGitHub.EndpointTest do
 
   test "it returns 401 for an invalid http signature" do
     request = %{
-      action: "created",
+      action: "opened",
       issue: %{
         id: 519_124_749,
         number: 30,
@@ -113,7 +113,7 @@ defmodule ExGitHub.EndpointTest do
     }
 
     fake_request = %{
-      action: "unknown",
+      action: "closed",
       issue: %{
         id: 519_124_749,
         number: 30,
@@ -128,7 +128,7 @@ defmodule ExGitHub.EndpointTest do
       )
 
     conn =
-      conn(:post, "/events", Poison.encode!(request))
+      conn(:post, "/v1/events", Poison.encode!(request))
       |> put_req_header("x-hub-signature", "sha1=#{hmac}")
       |> put_req_header("content-type", "application/json")
       |> ExGitHub.Endpoint.call(@opts)
@@ -154,7 +154,7 @@ defmodule ExGitHub.EndpointTest do
       )
 
     conn =
-      conn(:post, "/events", Poison.encode!(request))
+      conn(:post, "/v1/events", Poison.encode!(request))
       |> put_req_header("content-type", "application/json")
       |> ExGitHub.Endpoint.call(@opts)
 
