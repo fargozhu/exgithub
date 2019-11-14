@@ -57,7 +57,7 @@ defmodule ExGitHub.EndpointTest do
       issue: %{
         id: 519_124_749,
         number: @github_number,
-        labels: ["SUSE"]
+        labels: ["UNKNOWN"]
       }
     }
 
