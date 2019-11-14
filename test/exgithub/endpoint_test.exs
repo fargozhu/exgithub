@@ -3,6 +3,7 @@ defmodule ExGitHub.EndpointTest do
   use Plug.Test
 
   @opts ExGitHub.Endpoint.init([])
+  @github_number :rand.uniform(999)
 
   test "it returns 200 for health checking" do
     # Create a test connection
@@ -21,7 +22,7 @@ defmodule ExGitHub.EndpointTest do
       action: "opened",
       issue: %{
         id: 519_124_749,
-        number: 330,
+        number: @github_number,
         url: "https://api.github.com/repos/calipo/elixir_senml/issues/30",
         title: "sadd",
         labels: ["SUSE"],
@@ -55,7 +56,7 @@ defmodule ExGitHub.EndpointTest do
       action: "closed",
       issue: %{
         id: 519_124_749,
-        number: 330,
+        number: @github_number,
         labels: ["SUSE"]
       }
     }
