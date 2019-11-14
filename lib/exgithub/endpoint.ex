@@ -9,7 +9,6 @@ defmodule ExGitHub.Endpoint do
 
   @secret_token Application.get_env(:exgithub, :secret_token)
 
-
   plug(:match)
   plug(Plug.Logger)
   plug(Plug.RequestId)
@@ -35,6 +34,7 @@ defmodule ExGitHub.Endpoint do
 
   post "/v1/events" do
     Logger.info("/v1/events endpoint called")
+
     process_request(conn.body_params)
     |> send_response(conn)
   end
@@ -51,45 +51,33 @@ defmodule ExGitHub.Endpoint do
 
   # called when a label is added to a Github issue.
   defp process_request(payload = %{"action" => "labeled"}) do
-    Logger.debug("github action...labeled")
     ExGitHub.Controller.labeled_flow(payload)
   end
 
-    # called when a label is removed from a Github issue.
+  # called when a label is removed from a Github issue.
   defp process_request(payload = %{"action" => "unlabeled"}) do
-    Logger.debug("github action...unlabeled")
-    #response = ExGitHub.Controller.close(payload)
-
-    {:ok,
-      %{
-        status: "response.status",
-        action: "created",
-        payload: "response.payload"
-      }}
+    ExGitHub.Controller.unlabeled_flow(payload)
   end
 
-
   defp process_request(%{"action" => _}) do
-    Logger.debug("github action not supported")
+    Logger.info("github action not supported")
 
-    {:ok,
-     %{
-       status: 400,
-       payload: %{
-         error: "invalid action"
-       }
-     }}
+    %{
+      status: 400,
+      payload: %{
+        error: "invalid action"
+      }
+    }
   end
 
   defp process_request(_event) do
-    Logger.debug("invalid github payload")
+    Logger.info("invalid github payload")
 
-    {:ok,
-     %{
-       status: 400,
-       payload: %{
-         error: "invalid content"
-       }
-     }}
+    %{
+      status: 400,
+      payload: %{
+        error: "invalid content"
+      }
+    }
   end
 end
