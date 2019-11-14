@@ -19,7 +19,7 @@ defmodule ExGitHub.EndpointTest do
 
   test "it returns 200 when creating a new Jira issue" do
     request = %{
-      action: "opened",
+      action: "labeled",
       issue: %{
         id: 519_124_749,
         number: @github_number,
@@ -48,12 +48,12 @@ defmodule ExGitHub.EndpointTest do
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert resp_decoded["payload"]["msg"] == "github issue created in jira"
+    assert Map.has_key?(resp_decoded["payload"], "id") == true
   end
 
   test "it returns 200 when closing a Jira issue" do
     request = %{
-      action: "closed",
+      action: "unlabeled",
       issue: %{
         id: 519_124_749,
         number: @github_number,
