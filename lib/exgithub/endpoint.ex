@@ -8,7 +8,6 @@ defmodule ExGitHub.Endpoint do
   alias ExGitHub.Plug.{SignatureVerification, CacheBodyReader}
 
   @secret_token Application.get_env(:exgithub, :secret_token)
-  @label Application.get_env(:exgithub, :github_trigger_label)
 
   plug(:match)
   plug(Plug.Logger)
@@ -29,28 +28,15 @@ defmodule ExGitHub.Endpoint do
   plug(:dispatch)
 
   get "/health" do
-    Logger.info("/health endpoint")
+    Logger.info("/health endpoint called")
     send_resp(conn, 200, "OK")
   end
 
   post "/v1/events" do
-    Logger.info("/v1/events endpoint")
-    # Check if it contains the trigger @label
-    with true <- is_label_present(conn.body_params["issue"]["labels"], @label) do
-      Logger.info("event contains the trigger label(s)")
-      {:ok, resp} = process_request(conn.body_params)
+    Logger.info("/v1/events endpoint called")
 
-      resp
-      |> send_response(conn)
-    else
-      false ->
-        Logger.info("discarding the github event due lack of #{@label} trigger label(s)")
-
-        send_response(
-          %{status: 200, payload: "discarding the github event due lack of trigger label(s)"},
-          conn
-        )
-    end
+    process_request(conn.body_params)
+    |> send_response(conn)
   end
 
   match _ do
@@ -63,82 +49,35 @@ defmodule ExGitHub.Endpoint do
     |> send_resp(resp.status, Poison.encode!(resp))
   end
 
-  # called when a Github issue is created.
-  defp process_request(payload = %{"action" => "opened"}) do
-    Logger.debug("github action...opened")
-    response = ExGitHub.Controller.create(payload)
-
-    {:ok,
-     %{
-       status: response.status,
-       action: "created",
-       payload: response.payload
-     }}
-  end
-
-  # called when a Github issue is closed.
-  defp process_request(payload = %{"action" => "closed"}) do
-    Logger.debug("github action...closed")
-    response = ExGitHub.Controller.close(payload)
-
-    {:ok,
-     %{
-       status: response.status,
-       payload: %{
-         action: "closed",
-         payload: response.payload
-       }
-     }}
-  end
-
   # called when a label is added to a Github issue.
   defp process_request(payload = %{"action" => "labeled"}) do
-    Logger.debug("github action...labeled")
-    response = ExGitHub.Controller.create(payload)
+    ExGitHub.Controller.labeled_flow(payload)
+  end
 
-    {:ok,
-     %{
-       status: response.status,
-       action: "created",
-       payload: response.payload
-     }}
+  # called when a label is removed from a Github issue.
+  defp process_request(payload = %{"action" => "unlabeled"}) do
+    ExGitHub.Controller.unlabeled_flow(payload)
   end
 
   defp process_request(%{"action" => _}) do
-    Logger.debug("github action not supported")
+    Logger.info("github action not supported")
 
-    {:ok,
-     %{
-       status: 400,
-       payload: %{
-         error: "invalid action"
-       }
-     }}
+    %{
+      status: 400,
+      payload: %{
+        error: "invalid action"
+      }
+    }
   end
 
   defp process_request(_event) do
-    Logger.debug("invalid github payload")
+    Logger.info("invalid github payload")
 
-    {:ok,
-     %{
-       status: 400,
-       payload: %{
-         error: "invalid content"
-       }
-     }}
+    %{
+      status: 400,
+      payload: %{
+        error: "invalid content"
+      }
+    }
   end
-
-  defp is_label_present(labels, label_to_find) when not is_nil(labels),
-    do: Enum.member?(labels, label_to_find)
-
-  defp is_label_present(labels, label_to_find) when is_nil(labels), do: false
-
-  # def child_spec(opts) do
-  #  %{
-  #    id: __MODULE__,
-  #    start: {__MODULE__, :start_link, [opts]}
-  #  }
-  # end
-
-  # def start_link(_opts), do: Plug.Cowboy.http(__MODULE__, [])
 end
