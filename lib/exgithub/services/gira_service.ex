@@ -1,4 +1,8 @@
-defmodule ExGitHub.GiraApi do
+defmodule ExGitHub.Services.GiraService do
+  alias ExGitHub.Services.GiraServiceProvider
+
+  @behaviour GiraServiceProvider
+
   @base_url System.get_env("JIRA_BASE_URL")
   @authorization_token System.get_env("JIRA_AUTH_TOKEN")
 
@@ -10,7 +14,7 @@ defmodule ExGitHub.GiraApi do
     ## Examples:
 
   """
-  @callback create(%{}) :: %{}
+  @impl GiraServiceProvider
   def create(req) do
     {:ok, client} = Gira.new(@base_url, @authorization_token)
     {_, response} = Gira.create_issue_with_basic_info(client, req)
@@ -25,7 +29,7 @@ defmodule ExGitHub.GiraApi do
   ## Examples:
 
   """
-  @callback close(integer()) :: %{}
+  @impl GiraServiceProvider
   def close(jira_id) do
     {:ok, client} = Gira.new(@base_url, @authorization_token)
     {:ok, response} = Gira.close_issue(client, %{jira_id: jira_id, transition_id: "31"})
@@ -40,7 +44,7 @@ defmodule ExGitHub.GiraApi do
   ## Examples:
 
   """
-  @callback get(String.t()) :: %{}
+  @impl GiraServiceProvider
   def get(filter) do
     {:ok, client} = Gira.new(@base_url, @authorization_token)
     {:ok, response} = Gira.get_issue_basic_info_by_query(client, filter)

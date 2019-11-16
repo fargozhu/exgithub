@@ -1,6 +1,6 @@
 ExUnit.start()
 
-Mox.defmock(ExGitHub.GiraApiMock, for: ExGitHub.GiraApi)
+Mox.defmock(ExGitHub.Services.GiraServiceMock, for: ExGitHub.Services.GiraServiceProvider)
 
 defmodule ExGitHub.Helpers do
   def generate_http_signature(secret, payload) do
