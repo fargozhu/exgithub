@@ -6,3 +6,6 @@ config :exgithub,
   jira_base_url: System.fetch_env!("JIRA_BASE_URL"),
   jira_auth_token: System.fetch_env!("JIRA_AUTH_TOKEN"),
   github_trigger_label: "SUSE"
+
+
+import_config "#{Mix.env()}.exs"

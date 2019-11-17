@@ -40,7 +40,7 @@ defmodule ExGitHub.MixProject do
     [
       maintainers: ["fargozhu"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/fargozhu/exgithub"}
+      links: %{"GitHub" => "https://github.com/calipo/exgithub"}
     ]
   end
 end
