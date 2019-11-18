@@ -27,7 +27,6 @@ defmodule ExGitHub.MixProject do
       exgithub: [
         include_executables_for: [:unix],
         applications: [runtime_tools: :permanent],
-        #steps: [:assemble, :tar]
       ]
     ]
   end

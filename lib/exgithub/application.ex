@@ -9,7 +9,7 @@ defmodule ExGitHub.Application do
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: ExGitHub.Endpoint,
-        options: [port: Application.get_env(:exgithub, :port)]
+        #options: [port: Application.get_env(:exgithub, :port)]
       )
     ]
 
