@@ -8,3 +8,8 @@ config :exgithub,
   github_trigger_label: "SUSE"
 
 config :exgithub, port: 8080
+
+config :logger,
+  level: :debug,
+  truncate: :infinity
+
