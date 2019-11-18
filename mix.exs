@@ -9,7 +9,8 @@ defmodule ExGitHub.MixProject do
       package: package(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      test_coverage: [tool: ExCoveralls]
+      test_coverage: [tool: ExCoveralls],
+      #releases: releases()
     ]
   end
 
@@ -18,6 +19,16 @@ defmodule ExGitHub.MixProject do
     [
       extra_applications: [:logger, :plug_cowboy],
       mod: {ExGitHub.Application, []}
+    ]
+  end
+
+  defp releases do
+    [
+      exgithub: [
+        include_executables_for: [:unix],
+        applications: [runtime_tools: :permanent],
+        #steps: [:assemble, :tar]
+      ]
     ]
   end
 
@@ -32,7 +43,8 @@ defmodule ExGitHub.MixProject do
       {:mox, "~> 0.5.1", only: [:dev, :test]},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
       {:inch_ex, "~>2.0", only: [:dev, :test]},
-      {:benchfella, "~> 0.3.3", only: :dev}
+      {:benchfella, "~> 0.3.3", only: :dev},
+      {:distillery, "~> 2.0"}
     ]
   end
 

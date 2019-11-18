@@ -13,7 +13,7 @@ defmodule ExGitHub.Test.Services.GiraServiceMock do
   """
   @impl GiraServiceProvider
   def create(req) do
-    %{:ok, %{}}
+    {:ok, %{}}
   end
 
   @doc """
@@ -26,7 +26,8 @@ defmodule ExGitHub.Test.Services.GiraServiceMock do
   """
   @impl GiraServiceProvider
   def close(jira_id) do
-    %{:ok, %{}}  end
+    {:ok, %{}}
+  end
 
   @doc """
   Searches for issues within a customized `filter`
@@ -38,7 +39,6 @@ defmodule ExGitHub.Test.Services.GiraServiceMock do
   """
   @impl GiraServiceProvider
   def get(filter) do
-    %{:ok, %{}}
+    {:ok, %{}}
   end
-
 end
