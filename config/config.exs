@@ -6,7 +6,7 @@ config :logger, :console,
   metadata: [:request_id]
 
 config :exgithub,
-  port: 80,
+  port: 8080,
   secret_token: System.fetch_env!("SECRET_TOKEN"),
   jira_base_url: System.fetch_env!("JIRA_BASE_URL"),
   jira_auth_token: System.fetch_env!("JIRA_AUTH_TOKEN"),
