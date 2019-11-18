@@ -51,7 +51,6 @@ defmodule ExGitHub.Services.GiraService do
     {:ok, client} = Gira.new(@base_url, @authorization_token)
     #{_status, response} = Gira.get_issue_basic_info_by_query(client, filter)
     Logger.info("returning jira search response")
-    response = %{status: 500, payload: error}
-    response
+    %{status: 500, payload: "error"}
   end
 end
