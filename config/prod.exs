@@ -1,3 +1,3 @@
 use Mix.Config
 
-config :exgithub, port: System.get_env("PORT")
+config :exgithub, port: 8080

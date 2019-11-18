@@ -7,7 +7,7 @@ config :exgithub,
   jira_auth_token: System.get_env("JIRA_AUTH_TOKEN"),
   github_trigger_label: "SUSE"
 
-config :exgithub, port: System.get_env("PORT")
+config :exgithub, port: 8080
 
 config :logger,
   level: :debug,
