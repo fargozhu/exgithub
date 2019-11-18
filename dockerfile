@@ -35,7 +35,7 @@ RUN APP_NAME="exgithub" && \
 #================
 #Deployment Stage
 #================
-FROM bitwalker/alpine-erlang:latest:latest
+FROM bitwalker/alpine-elixir:1.9.0
 
 RUN apk --no-cache add bash curl
 #RUN apt-get -y install openssl
