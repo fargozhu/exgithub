@@ -35,9 +35,10 @@ RUN APP_NAME="exgithub" && \
 #================
 #Deployment Stage
 #================
-FROM pentacent/alpine-erlang-base:latest
+FROM bitwalker/alpine-erlang:latest:latest
 
 RUN apk --no-cache add bash curl
+#RUN apt-get -y install openssl
 
 #Copy and extract .tar.gz Release file from the previous stage
 COPY --from=build /export/ .
