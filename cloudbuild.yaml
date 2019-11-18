@@ -1,0 +1,13 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/exgithub', '.' ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'gcr.io/$PROJECT_ID/exgithub']
+  - name: gcr.io/cloud-builders/gcloud
+    env:
+    - 'JIRA_AUTH_TOKEN=${_JIRA_AUTH_TOKEN}'
+    - 'JIRA_BASE_URL=${_JIRA_BASE_URL}'
+    - 'SECRET_TOKEN=${_SECRET_TOKEN}'
+    args: ['beta', 'run', 'deploy', '--set-env-vars=JIRA_AUTH_TOKEN=${_JIRA_AUTH_TOKEN},JIRA_BASE_URL=${_JIRA_BASE_URL},SECRET_TOKEN=${_SECRET_TOKEN}', '--region', 'us-central1', '--allow-unauthenticated', '--image', 'gcr.io/$PROJECT_ID/exgithub', 'exgithub', '--platform', 'managed']
+images:
+  - 'gcr.io/$PROJECT_ID/exgithub'

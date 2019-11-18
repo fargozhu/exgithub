@@ -1,3 +1,3 @@
 use Mix.Config
 
-config :exgithub, port: 80
+config :exgithub, port: 8080

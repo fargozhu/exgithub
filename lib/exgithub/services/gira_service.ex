@@ -1,6 +1,8 @@
 defmodule ExGitHub.Services.GiraService do
   alias ExGitHub.Services.GiraServiceProvider
 
+  require Logger
+
   @behaviour GiraServiceProvider
 
   @base_url System.get_env("JIRA_BASE_URL")
@@ -47,7 +49,9 @@ defmodule ExGitHub.Services.GiraService do
   @impl GiraServiceProvider
   def get(filter) do
     {:ok, client} = Gira.new(@base_url, @authorization_token)
-    {:ok, response} = Gira.get_issue_basic_info_by_query(client, filter)
-    response
+    Gira.get_issue_basic_info_by_query(client, filter)
+    |> IO.inspect
+    Logger.info("returning jira search response")
+    %{status: 500, payload: "error"}
   end
 end

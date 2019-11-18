@@ -1,12 +1,10 @@
 defmodule ExGitHub.Controller do
   require Logger
 
-  @label Application.get_env(:exgithub, :github_trigger_label)
-
-  def labeled_flow(request, service_module \\ ExGitHub.Services.GiraService) do
+  def labeled_flow(request, label, service_module \\ ExGitHub.Services.GiraService) do
     Logger.info("github action is labeled")
 
-    with true <- is_label_present?(request["issue"]["labels"], @label),
+    with true <- is_label_present?(request["issue"]["labels"], label),
          true <- is_state_open?(request["issue"]["state"]),
          jira_resp <- search_jira_issue(request["issue"]["number"], service_module),
          false <- is_exist?(jira_resp.status) do
@@ -20,10 +18,10 @@ defmodule ExGitHub.Controller do
     end
   end
 
-  def unlabeled_flow(request, service_module \\ ExGitHub.Services.GiraService) do
+  def unlabeled_flow(request, label, service_module \\ ExGitHub.Services.GiraService) do
     Logger.info("github action is unlabeled")
 
-    with false <- is_label_present?(request["issue"]["labels"], @label),
+    with false <- is_label_present?(request["issue"]["labels"], label),
          jira_resp <- search_jira_issue(request["issue"]["number"], service_module),
          true <- is_exist?(jira_resp.status) do
       Logger.info("closing jira issue for GitHub issue number #{request["issue"]["number"]}")
