@@ -10,13 +10,11 @@ RUN mix local.rebar --force
 COPY . .
 
 #Set environment variables and expose port
-ARG PORT
 ARG JIRA_AUTH_TOKEN
 ARG JIRA_BASE_URL
 ARG SECRET_TOKEN
 
 ENV REPLACE_OS_VARS=true \
-    PORT=$PORT \
     JIRA_AUTH_TOKEN=$JIRA_AUTH_TOKEN \
     JIRA_BASE_URL=$JIRA_BASE_URL \
     SECRET_TOKEN=$SECRET_TOKEN
@@ -44,18 +42,16 @@ RUN apk --no-cache add bash curl
 COPY --from=build /export/ .
 
 #Set environment variables and expose port
-ARG PORT
 ARG JIRA_AUTH_TOKEN
 ARG JIRA_BASE_URL
 ARG SECRET_TOKEN
 
 ENV REPLACE_OS_VARS=true \
-    PORT=$PORT \
     JIRA_AUTH_TOKEN=$JIRA_AUTH_TOKEN \
     JIRA_BASE_URL=$JIRA_BASE_URL \
     SECRET_TOKEN=$SECRET_TOKEN
 
-EXPOSE ${PORT}
+EXPOSE 80
 
 #Change user
 USER default
