@@ -9,6 +9,6 @@ steps:
     - 'JIRA_BASE_URL=${_JIRA_BASE_URL}'
     - 'SECRET_TOKEN=${_SECRET_TOKEN}'
     - 'PORT=${_PORT}'
-    args: ['beta', 'run', 'deploy', '--set-env-vars=JIRA_AUTH_TOKEN=${_JIRA_AUTH_TOKEN},JIRA_BASE_URL=${_JIRA_BASE_URL},SECRET_TOKEN=${_SECRET_TOKEN}', '--region', 'us-central1', '--allow-unauthenticated', '--image', 'gcr.io/$PROJECT_ID/exgithub', 'exgithub']
+    args: ['beta', 'run', 'deploy', '--set-env-vars=JIRA_AUTH_TOKEN=${_JIRA_AUTH_TOKEN},JIRA_BASE_URL=${_JIRA_BASE_URL},SECRET_TOKEN=${_SECRET_TOKEN},PORT=${_PORT}', '--region', 'us-central1', '--allow-unauthenticated', '--image', 'gcr.io/$PROJECT_ID/exgithub', 'exgithub']
 images:
   - 'gcr.io/$PROJECT_ID/exgithub'
