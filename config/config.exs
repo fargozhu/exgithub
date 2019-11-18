@@ -7,8 +7,8 @@ config :logger, :console,
 
 config :exgithub,
   port: 8080,
-  secret_token: System.fetch_env!("SECRET_TOKEN"),
-  jira_base_url: System.fetch_env!("JIRA_BASE_URL"),
-  jira_auth_token: System.fetch_env!("JIRA_AUTH_TOKEN"),
+  secret_token: System.get_env("SECRET_TOKEN"),
+  jira_base_url: System.get_env("JIRA_BASE_URL"),
+  jira_auth_token: System.get_env("JIRA_AUTH_TOKEN"),
   github_trigger_label: "SUSE"
 #import_config "#{Mix.env()}.exs"
