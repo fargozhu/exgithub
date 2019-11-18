@@ -48,6 +48,7 @@ defmodule ExGitHub.Services.GiraService do
   def get(filter) do
     {:ok, client} = Gira.new(@base_url, @authorization_token)
     {:ok, response} = Gira.get_issue_basic_info_by_query(client, filter)
+    |> IO.inspect
     response
   end
 end
