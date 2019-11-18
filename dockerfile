@@ -23,7 +23,7 @@ ENV REPLACE_OS_VARS=true \
 RUN export MIX_ENV=prod && \
     rm -Rf _build && \
     mix deps.get && \
-    mix release
+    mix distillery.release
 
 #Extract Release archive to /rel for copying in next stage
 RUN APP_NAME="exgithub" && \
