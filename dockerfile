@@ -9,6 +9,18 @@ RUN mix local.rebar --force
 #Copy the source folder into the Docker image
 COPY . .
 
+#Set environment variables and expose port
+ARG PORT
+ARG JIRA_AUTH_TOKEN
+ARG JIRA_BASE_URL
+ARG SECRET_TOKEN
+
+ENV REPLACE_OS_VARS=true \
+    PORT=$PORT \
+    JIRA_AUTH_TOKEN=$JIRA_AUTH_TOKEN \
+    JIRA_BASE_URL=$JIRA_BASE_URL \
+    SECRET_TOKEN=$SECRET_TOKEN
+
 #Install dependencies and build Release
 RUN export MIX_ENV=prod && \
     rm -Rf _build && \
@@ -40,7 +52,7 @@ ARG SECRET_TOKEN
 ENV REPLACE_OS_VARS=true \
     PORT=$PORT \
     JIRA_AUTH_TOKEN=$JIRA_AUTH_TOKEN \
-    JIRA_BASE_URL==$JIRA_BASE_URL \
+    JIRA_BASE_URL=$JIRA_BASE_URL \
     SECRET_TOKEN=$SECRET_TOKEN
 
 EXPOSE ${PORT}
