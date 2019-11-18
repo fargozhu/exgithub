@@ -1,6 +1,8 @@
 defmodule ExGitHub.Services.GiraService do
   alias ExGitHub.Services.GiraServiceProvider
 
+  require Logger
+
   @behaviour GiraServiceProvider
 
   @base_url System.get_env("JIRA_BASE_URL")
