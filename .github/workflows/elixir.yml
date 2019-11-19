@@ -47,7 +47,7 @@ jobs:
         JIRA_AUTH_TOKEN: ${{ secrets.JIRA_AUTH_TOKEN }}
         SECRET_TOKEN: $$ { secrets.SECRET_TOKEN }}
     - name: Build docker image
-      uses: actions-hub/docker/login@master
+      uses: actions/docker/cli@master
       with:
         args: "build \
           --build-arg JIRA_AUTH_TOKEN={{ secrets.JIRA_AUTH_TOKEN }} \
