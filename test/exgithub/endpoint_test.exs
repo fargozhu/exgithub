@@ -77,6 +77,7 @@ defmodule ExGitHub.EndpointTest do
     assert conn.status == 200
   end
 
+  @tag :skip
   test "it returns 200 when closing a Jira issue" do
     request = %{
       action: "closed",
