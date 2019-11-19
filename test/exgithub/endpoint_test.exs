@@ -51,13 +51,39 @@ defmodule ExGitHub.EndpointTest do
     assert Map.has_key?(resp_decoded["payload"], "id") == true
   end
 
-  test "it returns 200 when closing a Jira issue" do
+  test "it returns 200 when unlabeling a Jira issue" do
     request = %{
       action: "unlabeled",
       issue: %{
         id: 519_124_749,
         number: @github_number,
         labels: ["UNKNOWN"]
+      }
+    }
+
+    hmac =
+      ExGitHub.Helpers.generate_http_signature(
+        Application.get_env(:exgithub, :secret_token),
+        Poison.encode!(request)
+      )
+
+    conn =
+      conn(:post, "/v1/events", Poison.encode!(request))
+      |> put_req_header("x-hub-signature", "sha1=#{hmac}")
+      |> put_req_header("content-type", "application/json")
+      |> ExGitHub.Endpoint.call(@opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "it returns 200 when closing a Jira issue" do
+    request = %{
+      action: "closed",
+      issue: %{
+        id: 519_124_749,
+        number: @github_number,
+        labels: ["whocares"]
       }
     }
 
