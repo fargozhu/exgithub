@@ -51,6 +51,7 @@ defmodule ExGitHub.EndpointTest do
     assert Map.has_key?(resp_decoded["payload"], "id") == true
   end
 
+  @tag :skip
   test "it returns 200 when unlabeling a Jira issue" do
     request = %{
       action: "unlabeled",
