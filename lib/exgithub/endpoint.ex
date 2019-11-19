@@ -60,6 +60,11 @@ defmodule ExGitHub.Endpoint do
     ExGitHub.Controller.unlabeled_flow(payload, @label)
   end
 
+  # called when a GitHub issue is closed
+  defp process_request(payload = %{"action" => "closed"}) do
+    ExGitHub.Controller.closed_flow(payload)
+  end
+
   defp process_request(%{"action" => _}) do
     Logger.info("github action not supported")
 

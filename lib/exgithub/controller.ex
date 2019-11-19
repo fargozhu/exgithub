@@ -6,7 +6,7 @@ defmodule ExGitHub.Controller do
 
     with true <- is_label_present?(request["issue"]["labels"], label),
          true <- is_state_open?(request["issue"]["state"]),
-         jira_resp <- search_jira_issue(request["issue"]["number"], service_module),
+         {:ok, jira_resp} <- search_jira_issue(request["issue"]["number"], service_module),
          false <- is_exist?(jira_resp.status) do
       parse = ExGitHub.Parser.parse_jira(request)
       Logger.info("creating a jira issue for GitHub issue number #{request["issue"]["number"]}")
@@ -21,14 +21,28 @@ defmodule ExGitHub.Controller do
   def unlabeled_flow(request, label, service_module \\ ExGitHub.Services.GiraService) do
     Logger.info("github action is unlabeled")
 
-    with false <- is_label_present?(request["issue"]["labels"], label),
-         jira_resp <- search_jira_issue(request["issue"]["number"], service_module),
-         true <- is_exist?(jira_resp.status) do
+    with  false <- is_label_present?(request["issue"]["labels"], label),
+          {:ok, jira_resp} <- search_jira_issue(request["issue"]["number"], service_module),
+          true <- is_exist?(jira_resp.status) do
       Logger.info("closing jira issue for GitHub issue number #{request["issue"]["number"]}")
       close_jira_issue(jira_resp, service_module)
     else
       _ ->
         Logger.info("labeled issue does not match one or more rules and it will be ignored.")
+        %{status: 202, payload: %{msg: "github issue failed rules"}}
+    end
+  end
+
+  def closed_flow(request, service_module \\ ExGitHub.Services.GiraService) do
+    Logger.info("github action is closed")
+
+    with  {:ok, jira_resp} <- search_jira_issue(request["issue"]["number"], service_module),
+          true <- is_exist?(jira_resp.status) do
+      Logger.info("closing jira issue for GitHub issue number #{request["issue"]["number"]}")
+      close_jira_issue(jira_resp, service_module)
+    else
+      _ ->
+        Logger.info("closed issue does not match one or more rules and it will be ignored.")
         %{status: 202, payload: %{msg: "github issue failed rules"}}
     end
   end
@@ -48,7 +62,8 @@ defmodule ExGitHub.Controller do
   defp search_jira_issue(github_id, service_module \\ ExGitHub.Services.GiraService) do
     filter = "labels%3DGitHub-#{github_id}"
     Logger.debug("check if github id #{github_id} exists in jira using filter #{filter}")
-    service_module.get(filter)
+    response = service_module.get(filter)  # %{payload: anything, status: number}
+    {:ok, response}
   end
 
   defp is_exist?(status), do: status == 200
