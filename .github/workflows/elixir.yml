@@ -48,11 +48,12 @@ jobs:
         SECRET_TOKEN: $$ { secrets.SECRET_TOKEN }}
     - name: Build docker image
       uses: actions-hub/docker/login@master
-      run: docker build \
+      with:
+        args: "build \
           --build-arg JIRA_AUTH_TOKEN={{ secrets.JIRA_AUTH_TOKEN }} \
           --build-arg JIRA_BASE_URL={{ secrets.JIRA_BASE_URL }} \
           --build-arg SECRET_TOKEN={{ secrets.SECRET_TOKEN }} \
-          --tagt eu.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }} .
+          --tag eu.gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }} ."        
     # - name: Authenticate into Google Cloud Platform
     #   uses: actions/gcloud/auth@master
     #   env:
