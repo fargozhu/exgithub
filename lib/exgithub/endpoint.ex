@@ -8,7 +8,6 @@ defmodule ExGitHub.Endpoint do
   alias ExGitHub.Plug.{SignatureVerification, CacheBodyReader}
 
   @secret_token Application.get_env(:exgithub, :secret_token)
-  @label Application.get_env(:exgithub, :github_trigger_label)
 
   plug(:match)
   plug(Plug.Logger)
@@ -52,12 +51,12 @@ defmodule ExGitHub.Endpoint do
 
   # called when a label is added to a Github issue.
   defp process_request(payload = %{"action" => "labeled"}) do
-    ExGitHub.Controller.labeled_flow(payload, @label)
+    ExGitHub.Controller.labeled_flow(payload)
   end
 
   # called when a label is removed from a Github issue.
   defp process_request(payload = %{"action" => "unlabeled"}) do
-    ExGitHub.Controller.unlabeled_flow(payload, @label)
+    ExGitHub.Controller.unlabeled_flow(payload)
   end
 
   # called when a GitHub issue is closed
