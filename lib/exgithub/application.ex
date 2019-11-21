@@ -7,11 +7,7 @@ defmodule ExGitHub.Application do
   def start(_type, _args) do
     build_app_env()
 
-    port =
-      get_port(
-        Application.get_env(:exgithub, :port),
-        String.length(Application.get_env(:exgithub, :port))
-      )
+    port = 80
 
     children = [
       Plug.Cowboy.child_spec(
