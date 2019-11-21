@@ -1,23 +1,13 @@
 #===========
 #Build Stage
 #===========
-FROM bitwalker/alpine-elixir:1.9.0 as build
+FROM bitwalker/alpine-elixir:1.9.0 as builder
 
 RUN mix local.hex --force
 RUN mix local.rebar --force
 
 #Copy the source folder into the Docker image
 COPY . .
-
-#Set environment variables and expose port
-ARG JIRA_AUTH_TOKEN
-ARG JIRA_BASE_URL
-ARG SECRET_TOKEN
-
-ENV REPLACE_OS_VARS=true \
-    JIRA_AUTH_TOKEN=$JIRA_AUTH_TOKEN \
-    JIRA_BASE_URL=$JIRA_BASE_URL \
-    SECRET_TOKEN=$SECRET_TOKEN
 
 #Install dependencies and build Release
 RUN export MIX_ENV=prod && \
@@ -35,25 +25,29 @@ RUN APP_NAME="exgithub" && \
 #================
 #Deployment Stage
 #================
-FROM bitwalker/alpine-elixir:1.9.0
+FROM bitwalker/alpine-elixir:1.9.0 as deployer
 
 RUN apk --no-cache add bash curl
-#RUN apt-get -y install openssl
+RUN set -ex && apk --no-cache add sudo
 
 #Copy and extract .tar.gz Release file from the previous stage
-COPY --from=build /export/ .
+COPY --from=builder /export/ .
 
 #Set environment variables and expose port
+ARG PORT
+ARG LABEL
 ARG JIRA_AUTH_TOKEN
 ARG JIRA_BASE_URL
 ARG SECRET_TOKEN
 
 ENV REPLACE_OS_VARS=true \
+    PORT=$PORT \
+    LABEL=$LABEL \
     JIRA_AUTH_TOKEN=$JIRA_AUTH_TOKEN \
     JIRA_BASE_URL=$JIRA_BASE_URL \
     SECRET_TOKEN=$SECRET_TOKEN
 
-EXPOSE 4000
+EXPOSE $PORT
 
 #Change user
 USER default
