@@ -5,11 +5,11 @@ steps:
     args: [ 'push', 'gcr.io/$PROJECT_ID/exgithub']
   - name: gcr.io/cloud-builders/gcloud
     env:
-    - 'PORT=${_PORT}'
+    - 'PORT=${_SERVER_PORT}'
     - 'LABEL=${_LABEL}'
     - 'JIRA_AUTH_TOKEN=${_JIRA_AUTH_TOKEN}'
     - 'JIRA_BASE_URL=${_JIRA_BASE_URL}'
     - 'SECRET_TOKEN=${_SECRET_TOKEN}'
-    args: ['beta', 'run', 'deploy', '--set-env-vars=JIRA_AUTH_TOKEN=${_JIRA_AUTH_TOKEN},JIRA_BASE_URL=${_JIRA_BASE_URL},SECRET_TOKEN=${_SECRET_TOKEN},PORT=${_PORT},LABEL=${_LABEL}', '--region', 'us-central1', '--allow-unauthenticated', '--image', 'gcr.io/$PROJECT_ID/exgithub', 'exgithub', '--platform', 'managed']
+    args: ['beta', 'run', 'deploy', '--set-env-vars=JIRA_AUTH_TOKEN=${_JIRA_AUTH_TOKEN},JIRA_BASE_URL=${_JIRA_BASE_URL},SECRET_TOKEN=${_SECRET_TOKEN},PORT=${_SERVER_PORT},LABEL=${_LABEL}', '--region', 'us-central1', '--allow-unauthenticated', '--image', 'gcr.io/$PROJECT_ID/exgithub', 'exgithub', '--platform', 'managed']
 images:
   - 'gcr.io/$PROJECT_ID/exgithub'
