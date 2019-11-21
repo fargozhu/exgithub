@@ -30,11 +30,20 @@ defmodule ExGitHub.Application do
 
   defp build_app_env() do
     Logger.info("setting app variables")
-    Application.put_env(:exgithub, :port, System.get_env("PORT"))
-    Application.put_env(:exgithub, :secret_token, System.get_env("SECRET_TOKEN"))
-    Application.put_env(:exgithub, :jira_base_url, System.get_env("JIRA_BASE_URL"))
-    Application.put_env(:exgithub, :jira_auth_token, System.get_env("JIRA_AUTH_TOKEN"))
-    Application.put_env(:exgithub, :github_trigger_label, System.get_env("LABEL"))
+
+    port = System.get_env("PORT")
+    secret_token = System.get_env("SECRET_TOKEN")
+    jira_base_url = System.get_env("JIRA_BASE_URL")
+    jira_auth_token = System.get_env("JIRA_AUTH_TOKEN")
+    label = System.get_env("LABEL")
+
+    Logger.info("Label: #{label}, URL: #{jira_base_url}:#{port}")
+
+    Application.put_env(:exgithub, :port, port)
+    Application.put_env(:exgithub, :secret_token, secret_token)
+    Application.put_env(:exgithub, :jira_base_url, jira_base_url)
+    Application.put_env(:exgithub, :jira_auth_token, jira_auth_token)
+    Application.put_env(:exgithub, :github_trigger_label, label)
   end
 
   defp get_port(port, length) when not is_nil(port) and length > 0, do: String.to_integer(port)
