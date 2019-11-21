@@ -17,13 +17,13 @@ defmodule ExGitHub.Application do
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: ExGitHub.Endpoint,
-        options: [port: port]
+        options: [port: http_port]
       )
     ]
 
     opts = [strategy: :one_for_one, name: ExGitHub.Supervisor]
 
-    Logger.info("starting application on port #{port}")
+    Logger.info("starting application on port #{http_port}")
 
     Supervisor.start_link(children, opts)
   end
