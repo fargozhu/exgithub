@@ -34,20 +34,20 @@ RUN set -ex && apk --no-cache add sudo
 COPY --from=builder /export/ .
 
 #Set environment variables and expose port
-ARG PORT
+ARG HTTP_PORT
 ARG LABEL
 ARG JIRA_AUTH_TOKEN
 ARG JIRA_BASE_URL
 ARG SECRET_TOKEN
 
 ENV REPLACE_OS_VARS=true \
-    PORT=$PORT \
+    HTTP_PORT=$HTTP_PORT \
     LABEL=$LABEL \
     JIRA_AUTH_TOKEN=$JIRA_AUTH_TOKEN \
     JIRA_BASE_URL=$JIRA_BASE_URL \
     SECRET_TOKEN=$SECRET_TOKEN
 
-EXPOSE $PORT
+EXPOSE $HTTP_PORT
 
 #Change user
 USER default

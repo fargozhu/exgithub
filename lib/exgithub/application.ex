@@ -31,7 +31,7 @@ defmodule ExGitHub.Application do
   defp build_app_env() do
     Logger.info("setting app variables")
 
-    port = System.get_env("PORT")
+    port = System.get_env("HTTP_PORT")
     secret_token = System.get_env("SECRET_TOKEN")
     jira_base_url = System.get_env("JIRA_BASE_URL")
     jira_auth_token = System.get_env("JIRA_AUTH_TOKEN")
