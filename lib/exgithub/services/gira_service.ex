@@ -5,9 +5,6 @@ defmodule ExGitHub.Services.GiraService do
 
   @behaviour GiraServiceProvider
 
-  @base_url System.get_env("JIRA_BASE_URL")
-  @authorization_token System.get_env("JIRA_AUTH_TOKEN")
-
   @doc """
     Opens a new jira issue with customized information parsed from GitHub request
 
@@ -18,7 +15,7 @@ defmodule ExGitHub.Services.GiraService do
   """
   @impl GiraServiceProvider
   def create(req) do
-    {:ok, client} = Gira.new(@base_url, @authorization_token)
+    {:ok, client} = new()
     {_, response} = Gira.create_issue_with_basic_info(client, req)
     response
   end
@@ -33,7 +30,7 @@ defmodule ExGitHub.Services.GiraService do
   """
   @impl GiraServiceProvider
   def close(jira_id) do
-    {:ok, client} = Gira.new(@base_url, @authorization_token)
+    {:ok, client} = new()
     {:ok, response} = Gira.close_issue(client, %{jira_id: jira_id, transition_id: "31"})
     response
   end
@@ -48,10 +45,17 @@ defmodule ExGitHub.Services.GiraService do
   """
   @impl GiraServiceProvider
   def get(filter) do
-    {:ok, client} = Gira.new(@base_url, @authorization_token)
-    Gira.get_issue_basic_info_by_query(client, filter)
-    |> IO.inspect
-    Logger.info("returning jira search response")
-    %{status: 500, payload: "error"}
+    {:ok, client} = new()
+    {_status, response} = Gira.get_issue_basic_info_by_query(client, filter)
+    response
+  end
+
+  defp new() do
+    base_url = Application.get_env(:exgithub, :jira_base_url)
+    authorization_token = Application.get_env(:exgithub, :jira_auth_token)
+
+    Logger.debug("initialize new client with URL: #{base_url}")
+
+    Gira.new(base_url, authorization_token)
   end
 end

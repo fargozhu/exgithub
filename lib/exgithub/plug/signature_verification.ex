@@ -18,7 +18,7 @@ defmodule ExGitHub.Plug.SignatureVerification do
 
   defp verify_signature(conn, opts) do
     with {:ok, digest} <- get_signature_digest(conn, opts),
-         {:ok, secret} <- get_secret(opts[:secret]),
+         {:ok, secret} <- get_secret(Application.get_env(:exgithub, :secret_token)),
          true <- valid_request?(digest, secret, conn) do
       Logger.info("signature validated with success")
       conn
