@@ -7,7 +7,7 @@ defmodule ExGitHub.Application do
   def start(_type, _args) do
     build_app_env()
 
-    port =
+    http_port =
       get_port(
         Application.get_env(:exgithub, :http_port),
         String.length(Application.get_env(:exgithub, :http_port))
