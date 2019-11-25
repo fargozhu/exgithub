@@ -7,8 +7,7 @@ defmodule ExGitHub.Application do
   def start(_type, _args) do
     build_app_env()
 
-    port = 80
-
+    port = get_port()
     children = [
       Plug.Cowboy.child_spec(
         scheme: :http,
@@ -42,6 +41,10 @@ defmodule ExGitHub.Application do
     Application.put_env(:exgithub, :github_trigger_label, label)
   end
 
-  defp get_port(port, length) when not is_nil(port) and length > 0, do: String.to_integer(port)
-  defp get_port(_, _), do: 4000
+  defp get_port() do
+      case Application.get_env(:exgithub, :port) do
+        nil -> 80
+        n -> String.to_integer(n)
+      end
+  end
 end
