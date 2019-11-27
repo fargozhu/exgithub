@@ -43,10 +43,10 @@ defmodule ExGitHub.Endpoint do
     send_resp(conn, 404, "oops... Nothing here :(")
   end
 
-  defp send_response(resp, conn) do
+  defp send_response({_, resp}, conn) do
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(resp.status, Poison.encode!(resp))
+    |> send_resp(resp.status, Poison.encode!(resp.payload))
   end
 
   # called when a label is added to a Github issue.

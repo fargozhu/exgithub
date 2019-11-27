@@ -58,9 +58,8 @@ defmodule ExGitHub.Plug.SignatureVerification do
   defp get_secret(_), do: {:error, "secret messed up"}
 
   defp valid_request?(digest, secret, conn) do
-    Logger.debug(conn.assigns.raw_body)
     hmac = :crypto.hmac(:sha, secret, conn.assigns.raw_body) |> Base.encode16(case: :lower)
-    Logger.debug("Comparing signatures: is " <> digest <> " equal to " <> hmac)
+    Logger.info("Comparing signatures: is " <> digest <> " equal to " <> hmac)
     Plug.Crypto.secure_compare(digest, hmac)
   end
 end

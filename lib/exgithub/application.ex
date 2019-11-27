@@ -8,6 +8,7 @@ defmodule ExGitHub.Application do
     build_app_env()
 
     port = get_port()
+
     children = [
       Plug.Cowboy.child_spec(
         scheme: :http,
@@ -32,7 +33,7 @@ defmodule ExGitHub.Application do
     jira_auth_token = System.get_env("JIRA_AUTH_TOKEN")
     label = System.get_env("LABEL")
 
-    Logger.info("Label: #{label}, URL: #{jira_base_url}:#{port}")
+    Logger.info("Label: #{label}, URL: #{jira_base_url}")
 
     Application.put_env(:exgithub, :port, port)
     Application.put_env(:exgithub, :secret_token, secret_token)
@@ -42,9 +43,9 @@ defmodule ExGitHub.Application do
   end
 
   defp get_port() do
-      case Application.get_env(:exgithub, :port) do
-        nil -> 80
-        n -> String.to_integer(n)
-      end
+    case Application.get_env(:exgithub, :port) do
+      nil -> 80
+      n -> String.to_integer(n)
+    end
   end
 end
