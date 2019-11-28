@@ -10,10 +10,11 @@ defmodule ExGitHub.Services.GiraService do
   """
   @impl GiraServiceProvider
   def create(req) do
-    Logger.debug("creating new jira issue with request: #{inspect(req)}")
+    Logger.info("creating new jira issue with request: #{inspect(req)}")
 
     new()
     |> Gira.create_issue_with_basic_info(req)
+    |> IO.inspect
   end
 
   @doc """
@@ -21,10 +22,11 @@ defmodule ExGitHub.Services.GiraService do
   """
   @impl GiraServiceProvider
   def close(jira_id) do
-    Logger.debug("closing jira issue with id: #{jira_id}")
+    Logger.info("closing jira issue with id: #{jira_id}")
 
     new()
     |> Gira.close_issue(%{jira_id: jira_id, transition_id: "31"})
+    |> IO.inspect
   end
 
   @doc """
@@ -32,10 +34,11 @@ defmodule ExGitHub.Services.GiraService do
   """
   @impl GiraServiceProvider
   def get(filter) do
-    Logger.debug("searching for jira issue with filter: #{filter}")
+    Logger.info("searching for jira issue with filter: #{filter}")
 
     new()
     |> Gira.get_issue_basic_info_by_query(filter)
+    |> IO.inspect
   end
 
   defp new() do
