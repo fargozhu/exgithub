@@ -78,8 +78,13 @@ defmodule ExGitHub.Controller do
 
   defp is_label_present?(labels) when not is_nil(labels) do
     label = Application.get_env(:exgithub, :github_trigger_label)
+
+    Logger.info("checking if github issue labels [#{labels}] belongs to the triger list [#{label}]")
+
     Enum.member?(labels, label)
   end
+
+  defp is_label_present?(nil), do: false
 
   defp print_me(msg) do
     IO.inspect(msg)
