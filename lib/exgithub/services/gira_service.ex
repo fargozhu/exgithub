@@ -14,7 +14,7 @@ defmodule ExGitHub.Services.GiraService do
 
     new()
     |> Gira.create_issue_with_basic_info(req)
-    |> IO.inspect
+    |> IO.inspect()
   end
 
   @doc """
@@ -26,7 +26,7 @@ defmodule ExGitHub.Services.GiraService do
 
     new()
     |> Gira.close_issue(%{jira_id: jira_id, transition_id: "31"})
-    |> IO.inspect
+    |> IO.inspect()
   end
 
   @doc """
@@ -38,7 +38,7 @@ defmodule ExGitHub.Services.GiraService do
 
     new()
     |> Gira.get_issue_basic_info_by_query(filter)
-    |> IO.inspect
+    |> IO.inspect()
   end
 
   defp new() do

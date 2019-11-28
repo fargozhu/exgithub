@@ -5,7 +5,7 @@ defmodule ExGitHub.Controller do
     Logger.info("github action is...'labeled'")
 
     with true <- is_label_present?(request["issue"]["labels"]),
-          true <- print_me(request["issue"]["state"]),
+         true <- print_me(request["issue"]["state"]),
          true <- is_state_open?(request["issue"]["state"]),
          {:ok, %{status: 404, payload: _}} <-
            search_jira_issue(request["issue"]["number"], service_module) do
@@ -74,13 +74,15 @@ defmodule ExGitHub.Controller do
 
   defp is_exist?(status), do: status == 200
 
-  defp is_state_open?(_state = "open") do true
+  defp is_state_open?(_state = "open"), do: true
   defp is_state_open?(_), do: false
 
   defp is_label_present?(labels) when not is_nil(labels) do
     label = Application.get_env(:exgithub, :github_trigger_label)
 
-    Logger.info("checking if github issue labels [#{labels}] belongs to the triger list [#{label}]")
+    Logger.info(
+      "checking if github issue labels [#{labels}] belongs to the triger list [#{label}]"
+    )
 
     Enum.member?(labels, label)
   end
