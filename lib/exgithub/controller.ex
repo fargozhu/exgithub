@@ -4,7 +4,8 @@ defmodule ExGitHub.Controller do
   def labeled_flow(request, service_module \\ ExGitHub.Services.GiraService) do
     Logger.info("github action is...'labeled'")
 
-    with true <- is_label_present?(request["issue"]["labels"]),
+    with true <- print_me(request["issue"]["labels"]),
+        true <- is_label_present?(request["issue"]["labels"]),
          true <- print_me(request["issue"]["state"]),
          true <- is_state_open?(request["issue"]["state"]),
          {:ok, %{status: 404, payload: _}} <-
@@ -90,7 +91,7 @@ defmodule ExGitHub.Controller do
   defp is_label_present?(nil), do: false
 
   defp print_me(msg) do
-    IO.inspect(msg)
+    Logger.info(msg)
     true
   end
 end

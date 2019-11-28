@@ -3,8 +3,8 @@ use Mix.Config
 # Our Logger general configuration
 config :logger,
   backends: [:console],
-  # compile_time_purge_level: :debug
-  level: :debug
+  compile_time_purge_level: :debug
+
 
 # Our Console Backend-specific configuration
 config :logger, :console,
