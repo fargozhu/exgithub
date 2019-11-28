@@ -10,7 +10,6 @@ defmodule ExGitHub.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_coverage: [tool: ExCoveralls]
-      # releases: releases()
     ]
   end
 
@@ -19,15 +18,6 @@ defmodule ExGitHub.MixProject do
     [
       extra_applications: [:logger, :plug_cowboy],
       mod: {ExGitHub.Application, []}
-    ]
-  end
-
-  defp releases do
-    [
-      exgithub: [
-        include_executables_for: [:unix],
-        applications: [runtime_tools: :permanent]
-      ]
     ]
   end
 

@@ -6,9 +6,7 @@ defmodule ExGitHub.Application do
 
   def start(_type, _args) do
     build_app_env()
-
     port = get_port()
-    set_log_level()
 
     children = [
       Plug.Cowboy.child_spec(
@@ -50,9 +48,5 @@ defmodule ExGitHub.Application do
       nil -> 80
       n -> String.to_integer(n)
     end
-  end
-
-  defp set_log_level() do
-    Logger.configure(level: :debug)
   end
 end
