@@ -14,7 +14,7 @@ RUN export MIX_ENV=prod && \
     rm -Rf _build && \
     mix deps.get && \
     mix distillery.init && \
-    mix distillery.release
+    MIX_ENV=prod mix distillery.release --verbose --env=prod
 
 #Extract Release archive to /rel for copying in next stage
 RUN APP_NAME="exgithub" && \
