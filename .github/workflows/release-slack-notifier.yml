@@ -1,0 +1,9 @@
+name: Release Slack Notifier Workflow
+on: [release]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Release Slack Notifier Action
+      uses: bitoiu/release-notify-action@v1.0
