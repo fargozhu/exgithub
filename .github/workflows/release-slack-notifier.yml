@@ -13,6 +13,6 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_USERNAME: fargozhu
           SLACK_CHANNEL: general
-          SLACK_OVERRIDE_MESSAGE: ${{ secrets.GITHUB_REF }}
+          SLACK_OVERRIDE_MESSAGE: 'New release is now available'
       uses: Ilshidur/action-slack@1.6.2
 
