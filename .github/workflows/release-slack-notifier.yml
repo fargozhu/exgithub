@@ -14,4 +14,3 @@ jobs:
           SLACK_OVERRIDE_MESSAGE: 'New release is now available'     
         with:
           args: 'A new release is here.' 
-
