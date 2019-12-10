@@ -13,6 +13,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_USERNAME: fargozhu
           SLACK_CHANNEL: general
-          SLACK_OVERRIDE_MESSAGE: 'release {{ EVENT_PAYLOAD.release.tag_name }} is now available'
+          SLACK_OVERRIDE_MESSAGE: 'KubeCF release {{ EVENT_PAYLOAD.release.tag_name }} is now 
+          available! Go ahead and give it a try {{ EVENT_Payload.release.html_url }}'
         with:
-          args: 'release {{ EVENT_PAYLOAD.release.tag_name }} is now available.'
+          args: 'legacy support'
