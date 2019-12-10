@@ -13,6 +13,6 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_USERNAME: fargozhu
           SLACK_CHANNEL: general
-          SLACK_OVERRIDE_MESSAGE: 'New release is now available'     
+          SLACK_OVERRIDE_MESSAGE: 'release {{ EVENT_PAYLOAD.release.tag_name }} is now available.' 
         with:
           args: 'release {{ EVENT_PAYLOAD.release.tag_name }} is now available.' 
