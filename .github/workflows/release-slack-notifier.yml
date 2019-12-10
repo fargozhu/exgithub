@@ -1,7 +1,5 @@
 name: Release Slack Notifier Workflow
-on: 
-  release:
-    types: [published, created, edited]
+on: release    
 
 jobs:
   notify:
