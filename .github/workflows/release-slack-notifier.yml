@@ -1,5 +1,7 @@
 name: Release Slack Notifier Workflow
-on: release    
+on: 
+  release:
+    types: created
 
 jobs:
   notify:
@@ -13,4 +15,4 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_OVERRIDE_MESSAGE: 'New release is now available'     
         with:
-          args: 'A new release is here.' 
+          args: 'release {{ EVENT_PAYLOAD.release.tag_name }} is now available.' 
