@@ -1,18 +1,17 @@
 name: Release Slack Notifier Workflow
 on: 
   release:
-    types:
-      - created
+    types: [published, created, edited]
 
 jobs:
-  build:
+  notify:
     runs-on: ubuntu-latest    
-    steps:
+    steps:      
       - name: GitHub Action to Notify Slack
+        uses: Ilshidur/action-slack@1.6.2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_USERNAME: fargozhu
           SLACK_CHANNEL: general
-          SLACK_OVERRIDE_MESSAGE: 'New release is now available'
-      uses: Ilshidur/action-slack@1.6.2
+          SLACK_OVERRIDE_MESSAGE: 'New release is now available'      
 
