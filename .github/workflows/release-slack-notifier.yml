@@ -11,5 +11,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_USERNAME: fargozhu
           SLACK_CHANNEL: general
-          SLACK_OVERRIDE_MESSAGE: 'New release is now available'      
+          SLACK_OVERRIDE_MESSAGE: 'New release is now available'     
+        with:
+          args: 'A new release is here.' 
 
