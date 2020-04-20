@@ -1,0 +1,19 @@
+name: Release Slack Notifier Workflow
+on: 
+  release:
+    types: created
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest    
+    steps:      
+      - name: GitHub Action to Notify Slack
+        uses: Ilshidur/action-slack@1.6.2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_USERNAME: fargozhu
+          SLACK_CHANNEL: general
+          SLACK_OVERRIDE_MESSAGE: 'KubeCF release {{ EVENT_PAYLOAD.release.tag_name }} is now 
+          available! Go ahead and give it a try {{ EVENT_PAYLOAD.release.html_url }}'
+        with:
+          args: 'legacy support'

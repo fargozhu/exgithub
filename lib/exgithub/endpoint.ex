@@ -8,7 +8,6 @@ defmodule ExGitHub.Endpoint do
   alias ExGitHub.Plug.{SignatureVerification, CacheBodyReader}
 
   @secret_token Application.get_env(:exgithub, :secret_token)
-  @label Application.get_env(:exgithub, :github_trigger_label)
 
   plug(:match)
   plug(Plug.Logger)
@@ -44,20 +43,25 @@ defmodule ExGitHub.Endpoint do
     send_resp(conn, 404, "oops... Nothing here :(")
   end
 
-  defp send_response(resp, conn) do
+  defp send_response({_, resp}, conn) do
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(resp.status, Poison.encode!(resp))
+    |> send_resp(resp.status, Poison.encode!(resp.payload))
   end
 
   # called when a label is added to a Github issue.
   defp process_request(payload = %{"action" => "labeled"}) do
-    ExGitHub.Controller.labeled_flow(payload, @label)
+    ExGitHub.Controller.labeled_flow(payload)
   end
 
   # called when a label is removed from a Github issue.
   defp process_request(payload = %{"action" => "unlabeled"}) do
-    ExGitHub.Controller.unlabeled_flow(payload, @label)
+    ExGitHub.Controller.unlabeled_flow(payload)
+  end
+
+  # called when a GitHub issue is closed
+  defp process_request(payload = %{"action" => "closed"}) do
+    ExGitHub.Controller.closed_flow(payload)
   end
 
   defp process_request(%{"action" => _}) do

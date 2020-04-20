@@ -1,14 +1,14 @@
 use Mix.Config
 
-# Configures Elixir's Logger
+# Our Logger general configuration
+config :logger,
+  backends: [:console],
+  compile_time_purge_level: :debug
+
+
+# Our Console Backend-specific configuration
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :exgithub,
-  port: 8080,
-  secret_token: System.get_env("SECRET_TOKEN"),
-  jira_base_url: System.get_env("JIRA_BASE_URL"),
-  jira_auth_token: System.get_env("JIRA_AUTH_TOKEN"),
-  github_trigger_label: "SUSE"
-#import_config "#{Mix.env()}.exs"
+# import_config "#{Mix.env()}.exs"
