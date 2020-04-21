@@ -19,7 +19,7 @@ jobs:
     - name: Build
       run: go build -v .
 
-    - uses: actions/label-pr-by-semantic@v1
+    - uses: actions/label-pr-by-semantic@v2
       if: always()
       with:
         status: ${{ job.status }}
